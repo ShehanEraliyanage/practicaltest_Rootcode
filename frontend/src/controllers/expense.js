@@ -18,6 +18,11 @@ export const addExpense = async (newExpense) => {
 }
 
 export const deletExpences = async (id) => {
-    const { data } = await axios.post(baseURL + "/expense/delete/", { id: id });
+    const { data } = await axios.get(baseURL + "/expense/deleteExpense/" + id);
     return data;
-  };
+};
+
+export const updateExpense = async (id, newExpense) => {
+    const { data } = await axios.post(baseURL + '/expense/editExpense/' + id, newExpense);
+    return data;
+}

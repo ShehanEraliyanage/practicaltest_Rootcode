@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Select from 'react-select';
 import swal from 'sweetalert';
 
-import {addExpense} from '../controllers/expense.js';
+import {addExpense, updateExpense} from '../controllers/expense.js';
 
 export default function (props) {
 
@@ -21,6 +21,7 @@ export default function (props) {
   const [des, setDes] = useState("");
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
+  const [id, setId] = useState("");
 
   useEffect(() => {
         setTitle(props.item.title);
@@ -28,6 +29,7 @@ export default function (props) {
         setAmount(props.item.amount);
         setDes(props.item.des);
         setDate(props.item.date);
+        setId(props.item._id)
   }, [props.item]);
 
   const closeOnClickHandler = (e) => {
@@ -62,12 +64,12 @@ export default function (props) {
         amount: amount,
         date: date
       }
-      addExpense(newExpense).then((result) => {
+      updateExpense(id, newExpense).then((result) => {
         console.log(result);
         if (result.isSuccess) {
           swal({
             title: "Success!",
-            text: "Expense added successfully",
+            text: "Expense updated successfully",
             icon: 'success',
             timer: 2000,
             button: false,
@@ -81,7 +83,10 @@ export default function (props) {
             button: false,
           })
         }
-        window.location.reload();
+        setTimeout(() => {
+            window.location.reload();
+          }, 3000);
+        
       })
     }
   }

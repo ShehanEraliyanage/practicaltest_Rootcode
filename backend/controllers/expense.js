@@ -90,7 +90,7 @@ export const deleteExpense = async (req, res) => {
 }
 
 export const editExpense = async (req, res) => {
-
+    
     const id = req.params.id;
     const {title, category, des, amount, date}=req.body;
     const updateItem={

@@ -87,7 +87,6 @@ export default function Home() {
   }
 
   const onCreateExpense = async () => {
-    console.log("ddddd")
     await setIsCreateExpensePopupActive(true);
   }
 
@@ -95,7 +94,10 @@ export default function Home() {
     await setIsCreateExpensePopupActive(false)
   }
 
-
+  const onEditExpense = async (value) => {
+    await setItem(value);
+    await setIsEditExpensePopupActive(true);
+  }
 
   function deleteExp(id) {
     swal({
@@ -107,15 +109,36 @@ export default function Home() {
     }).then((willDelete) => {
       if (willDelete) {
         deletExpences(id).then((result) => {
-        
-        });
-
-        swal("Poof! Your imaginary file has been deleted!", {
-          icon: "success",
-          title: "Delete Successfully!",
-          buttons: false,
-          timer: 2000,
-        });
+          if (result.isSuccess) {
+            swal("Poof! Your file has been deleted!", {
+              icon: "success",
+              title: "Delete Successfully!",
+              buttons: false,
+              timer: 2000,
+            });
+            window.location.reload();
+          } else {
+            swal({
+              title: "Error!",
+              text: "Something went wrong with the network. Try reloading page",
+              icon: 'error',
+              dangerMode: true,
+              button: true,
+            })
+            window.location.reload();
+          }
+        }).catch ((err) => {
+          swal({
+              title: "Error!",
+              text: "Something went wrong with the network. Try reloading page",
+              icon: 'error',
+              dangerMode: true,
+              button: true,
+          })
+          .then((reload) => {
+              window.location.reload();
+          });
+        });;     
       }
     });
   }
@@ -139,11 +162,11 @@ export default function Home() {
         </div>
       </div>
       
-
+      <div className="d-flex m-3">
       {expenses.map((value, index) =>{
         return (
-          <div className="row">
-            <div className="col-3">
+          // <div className="row">
+            <div className="col-3 m-3">
               <div className="card">
 
 
@@ -160,34 +183,30 @@ export default function Home() {
               
                 </div>
 
-                <div className="card-footer"> </div>
+                <div className="card-footer"> 
                 
-                <button
-                                class="btn btn-pill btn-danger btn-sm"
-                                style={{ marginLeft:20, width: 50, height:25 }}
+                              <button
+                                class="btn btn-pill btn-danger mx-3"
                                 onClick={() => deleteExp(value._id)}
                               >
                                 Delete
                               </button>
-                              <Link
-                                to={"/vehicleEdit/" + value._id}
-                                class="top-bar-link"
+                              <button
+                                class="btn btn-pill btn-success mx-3"
+                                onClick={() => onEditExpense(value)}
                               >
-                                <button
-                                  class="btn btn-pill btn-success btn-sm"
-                                  style={{ marginLeft:20, width: 50, height:25 }}
-                                >
-                                  Edit
-                                </button>
-                              </Link>
+                                Edit
+                              </button>
+                              </div>
 
               </div>
             </div>
-          </div>
+          // </div>
         );
       })}
+      </div>
       {isCreateExpenePopUpActive ? <CreateExpense onCloseHandler={onCloseHandler} /> : null}
-      {isEditExpenePopUpActive ? <EditExpense onCloseHandler={onCloseHandler} /> : null}
+      {isEditExpenePopUpActive ? <EditExpense onCloseHandler={onCloseHandler} item={item} /> : null}
     </ div>
   );
 }
