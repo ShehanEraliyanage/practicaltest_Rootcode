@@ -22,6 +22,14 @@ export default function (props) {
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
 
+  useEffect(() => {
+        setTitle(props.item.title);
+        setCategory(props.item.category);
+        setAmount(props.item.amount);
+        setDes(props.item.des);
+        setDate(props.item.date);
+  }, [props.item]);
+
   const closeOnClickHandler = (e) => {
     e.preventDefault();
     props.onCloseHandler();
@@ -96,6 +104,7 @@ export default function (props) {
                   className="form-control"
                   placeholder="Enter the title"
                   onChange={e => setTitle(e.target.value)}
+                  value={title}
                 />
               </div>
               <div className="col">
@@ -107,6 +116,10 @@ export default function (props) {
                   options={categories}
                   defaultValue={categories[0]}
                   onChange={onChangeCategory}
+                  value = {
+                    categories.filter(option => 
+                       option.label === category)
+                }
                 />
               </div>
             </div>
@@ -121,6 +134,7 @@ export default function (props) {
                   placeholder="Enter the title"
                   rows="4"
                   onChange={e => setDes(e.target.value)}
+                  value={des}
                 />
               </div>
             </div>
@@ -136,6 +150,7 @@ export default function (props) {
                   className="form-control"
                   placeholder="Enter the title"
                   onChange={e => setDate(e.target.value)}
+                  value={date}
                 />
               </div>
               <div className="col">
@@ -148,6 +163,7 @@ export default function (props) {
                   className="form-control"
                   placeholder="Enter the amount spent"
                   onChange={e => setAmount(e.target.value)}
+                  value={amount}
                 />
               </div>
             </div>

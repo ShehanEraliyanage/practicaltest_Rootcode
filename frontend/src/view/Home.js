@@ -2,14 +2,18 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import Select from 'react-select';
+import swal from 'sweetalert';
 
-import {getAllExpenses, getExpensesByCategory} from '../controllers/expense.js';
+import {getAllExpenses, getExpensesByCategory,deletExpences} from '../controllers/expense.js';
 import CreateExpense from "./CreateExp.js";
+import EditExpense from "./EditExpense.js";
 
 export default function Home() {
 
   const [expenses, setExpenses] = useState([]);
   const [isCreateExpenePopUpActive, setIsCreateExpensePopupActive] = useState(false);
+  const [isEditExpenePopUpActive, setIsEditExpensePopupActive] = useState(false);
+  const [item, setItem] = useState({});
 
   const categories = [
     { value: 'All', label: 'All' },
@@ -26,7 +30,29 @@ export default function Home() {
       console.log(result.result);
       if (result.isSuccess) {
         setExpenses(result.result)
+      } else {
+        swal({
+          title: "Error!",
+          text: "Something went wrong with the network. Try reloading page",
+          icon: 'error',
+          dangerMode: true,
+          button: true,
+        })
+        .then((reload) => {
+            window.location.reload();
+        });
       }
+    }).catch ((err) => {
+      swal({
+          title: "Error!",
+          text: "Something went wrong with the network. Try reloading page",
+          icon: 'error',
+          dangerMode: true,
+          button: true,
+      })
+      .then((reload) => {
+          window.location.reload();
+      });
     });
   }, []);
 
@@ -34,14 +60,66 @@ export default function Home() {
     getExpensesByCategory(e.value).then((res) => {
       if (res.isSuccess) {
         setExpenses(res.result)
+      } else {
+        swal({
+          title: "Error!",
+          text: "Something went wrong with the network. Try reloading page",
+          icon: 'error',
+          dangerMode: true,
+          button: true,
+        })
+        .then((reload) => {
+            window.location.reload();
+        });
       }
-    })
+    }).catch ((err) => {
+      swal({
+          title: "Error!",
+          text: "Something went wrong with the network. Try reloading page",
+          icon: 'error',
+          dangerMode: true,
+          button: true,
+      })
+      .then((reload) => {
+          window.location.reload();
+      });
+    });
   }
 
   const onCreateExpense = async () => {
     console.log("ddddd")
     await setIsCreateExpensePopupActive(true);
   }
+
+  const onCloseHandler = async () => {
+    await setIsCreateExpensePopupActive(false)
+  }
+
+
+
+  function deleteExp(id) {
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this imaginary file!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        deletExpences(id).then((result) => {
+        
+        });
+
+        swal("Poof! Your imaginary file has been deleted!", {
+          icon: "success",
+          title: "Delete Successfully!",
+          buttons: false,
+          timer: 2000,
+        });
+      }
+    });
+  }
+
 
   return (
     <div className="my-3 mx-5">
@@ -62,20 +140,54 @@ export default function Home() {
       </div>
       
 
-      {expenses.map((bk) => {
+      {expenses.map((value, index) =>{
         return (
           <div className="row">
             <div className="col-3">
               <div className="card">
-                <div className="card-body"></div>
+
+
+                <div className="card-body" key =  {index}>
+                  
+                    <div> 
+                      
+                    <h5> {value.title} </h5>    <h5> {value.date} </h5>
+                      <h5> {value.des} </h5>
+                      <h5> {value.category} </h5>
+                      <h5> {value.amount} </h5>
+
+                    </div>
+              
+                </div>
 
                 <div className="card-footer"> </div>
+                
+                <button
+                                class="btn btn-pill btn-danger btn-sm"
+                                style={{ marginLeft:20, width: 50, height:25 }}
+                                onClick={() => deleteExp(value._id)}
+                              >
+                                Delete
+                              </button>
+                              <Link
+                                to={"/vehicleEdit/" + value._id}
+                                class="top-bar-link"
+                              >
+                                <button
+                                  class="btn btn-pill btn-success btn-sm"
+                                  style={{ marginLeft:20, width: 50, height:25 }}
+                                >
+                                  Edit
+                                </button>
+                              </Link>
+
               </div>
             </div>
           </div>
         );
       })}
-      {isCreateExpenePopUpActive ? <CreateExpense /> : null}
+      {isCreateExpenePopUpActive ? <CreateExpense onCloseHandler={onCloseHandler} /> : null}
+      {isEditExpenePopUpActive ? <EditExpense onCloseHandler={onCloseHandler} /> : null}
     </ div>
   );
 }

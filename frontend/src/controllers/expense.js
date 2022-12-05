@@ -11,3 +11,13 @@ export const getExpensesByCategory = async (category) => {
     const { data } = await axios.get(baseURL + '/expense/getExpensesByCategory/'+ category);
     return data;
 }
+
+export const addExpense = async (newExpense) => {
+    const { data } = await axios.post(baseURL + '/expense/add', newExpense);
+    return data;
+}
+
+export const deletExpences = async (id) => {
+    const { data } = await axios.post(baseURL + "/expense/delete/", { id: id });
+    return data;
+  };
