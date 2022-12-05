@@ -1,25 +1,18 @@
+import "./App.css";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import './App.css';
-import {BrowserRouter, Route ,Routes} from 'react-router-dom'
-
-import Home from './view/Home';
-import CreateExp from './view/CreateExp';
-
+import Home from "./view/Home";
+import CreateExp from "./view/CreateExp";
 
 function App() {
   return (
-  <BrowserRouter>
-<Routes>
+    <BrowserRouter>
+      <Routes>
+        <Route exact path="/" element={<Home />} />
 
-
-<Route exact path = "/" element={<Home/>}/>
-
-<Route exact path = "/Exp" element={<CreateExp/>}/>
-
-
-</Routes>
-</BrowserRouter>
-
+        <Route exact path="/Exp" element={<CreateExp />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

@@ -43,18 +43,33 @@ export const getAllExpenses = async (req, res) => {
 
 export const getExpensesByCategory = async (req, res) => {
     const category = req.params.category;
-    await Expense.find({category: category}).then((res)=>{
-        res.json({
-            isSuccess: true,
-            result: res
-        });
-    }).catch(err => {
-        console.error(err);
-        res.json({
-            isSuccess: false,
-            result: err
-        });
-    })
+    if (category == "All") {
+        await Expense.find().then((res)=>{
+            res.json({
+                isSuccess: true,
+                result: res
+            });
+        }).catch(err => {
+            console.error(err);
+            res.json({
+                isSuccess: false,
+                result: err
+            });
+        })
+    } else {
+        await Expense.find({category: category}).then((res)=>{
+            res.json({
+                isSuccess: true,
+                result: res
+            });
+        }).catch(err => {
+            console.error(err);
+            res.json({
+                isSuccess: false,
+                result: err
+            });
+        })
+    }  
 }
 
 export const deleteExpense = async (req, res) => {
