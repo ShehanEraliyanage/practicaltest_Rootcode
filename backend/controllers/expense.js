@@ -2,7 +2,7 @@ import {Expense} from '../models/expense.js';
 
 export const addExpense = async (req, res) => {
 
-    console.log(req.body)
+    // console.log(req.body)
     const title = req.body.title;
     const category = req.body.category;
     const des = req.body.des;

@@ -38,8 +38,6 @@ export default function (props) {
       swal("Please enter a title")
     } else if (category == "") {
       swal("Please select a category")
-    } else if (des == "") {
-      swal("Please enter a description")
     } else if (amount == "") {
       swal("Please enter the amount you spent")
     } else if (isNaN(amount)) {
@@ -63,6 +61,8 @@ export default function (props) {
             icon: 'success',
             timer: 2000,
             button: false,
+          }).then(() => {
+            window.location.reload();
           });
         } else {
           swal({
@@ -71,65 +71,72 @@ export default function (props) {
             icon: 'error',
             dangerMode: true,
             button: false,
-          })
+          }).then(() => {
+            window.location.reload();
+          });
         }
-        window.location.reload();
+      }).catch((error) => {
+        console.log(error);
+        swal({
+          title: "Error!",
+          text: "Something went wrong went wrong. Try again",
+          icon: 'error',
+          dangerMode: true,
+          button: false,
+        }).then(() => {
+          window.location.reload();
+        });
       })
     }
   }
 
   return (
-    <div  class="card border bg-light w-60 shadow p-5" style={{position:'fixed', bottom:'15%', right:'23%', zIndex:1, width: "800px"}}>
-      <h4>Create Expence</h4>
+    <div  class="card border bg-light w-60 shadow p-5 border border-dark" 
+    style={{
+      position: "absolute",
+      left: "50%",
+      top: "50%",
+      transform: "translate(-50%, -50%)", 
+      zIndex:1, 
+      width: "800px"
+    }}>
+      <h4 className="mb-5">Create Expense</h4>
 
       <div>
         <form>
           <fieldset>
-            <div className="row mb-3 d-flex justify-content-between">
+            <div className="row mb-4 d-flex justify-content-between">
               <div className="col">
-                <label for="disabledTextInput" className="form-label">
-                  Title
-                </label>
                 <input
                   type="text"
                   id="disabledTextInput"
                   className="form-control"
-                  placeholder="Enter the title"
+                  placeholder="Title *"
                   onChange={e => setTitle(e.target.value)}
                 />
               </div>
               <div className="col">
-                <label for="disabledTextInput" className="form-label">
-                  Category
-                </label>
                 <Select
                   isSearchable
                   options={categories}
-                  defaultValue={categories[0]}
                   onChange={onChangeCategory}
                 />
               </div>
             </div>
-            <div className="row mb-3 d-flex justify-content-between">
+            <div className="row mb-4 d-flex justify-content-between">
               <div className="col">
-                <label for="disabledTextInput" className="form-label">
-                  Description
-                </label>
                 <textarea 
                   id="disabledTextInput"
                   className="form-control"
-                  placeholder="Enter the title"
+                  placeholder="Description"
                   rows="4"
                   onChange={e => setDes(e.target.value)}
                 />
               </div>
             </div>
 
-            <div className="row mb-3 d-flex justify-content-between">
+            <div className="row mb-5 d-flex justify-content-between">
               <div className="col">
-                <label for="disabledTextInput" className="form-label">
-                  Date
-                </label>
                 <input
                   type="date"
                   id="disabledTextInput"
@@ -139,14 +146,11 @@ export default function (props) {
                 />
               </div>
               <div className="col">
-                <label for="disabledTextInput" className="form-label">
-                  Amount
-                </label>
                 <input
                   type="text"
                   id="disabledTextInput"
                   className="form-control"
-                  placeholder="Enter the amount spent"
+                  placeholder="Amount spent *"
                   onChange={e => setAmount(e.target.value)}
                 />
               </div>
