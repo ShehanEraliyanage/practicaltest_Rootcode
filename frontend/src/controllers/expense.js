@@ -26,3 +26,8 @@ export const updateExpense = async (id, newExpense) => {
     const { data } = await axios.post(baseURL + '/expense/editExpense/' + id, newExpense);
     return data;
 }
+
+export const getMonthlyReport = async () => {
+    const { data } = await axios.get(baseURL + "/expense/getMonthlyReport/");
+    return data;
+}

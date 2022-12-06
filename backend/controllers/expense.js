@@ -109,3 +109,25 @@ export const editExpense = async (req, res) => {
         });
     }) 
 }
+
+export const getMonthlyReport = async (req, res) => {
+    
+    const month = new Date().getMonth() + 1;
+    console.log(month)
+    let summary = {};
+    await Expense.find({date: { $regex: "([0-9])*-" + month + "-([0-9])*" }})
+    .then((result) => {
+        for (let data of result) {
+            let cat = data.category;
+            if (summary[cat] === undefined) {
+                summary[cat] = Number(data.amount);
+            } else {
+                summary[cat] = Number(summary[cat]) + Number(data.amount);
+            }
+        }
+        res.json({ 
+            isSuccess: true,
+            result: summary
+        });
+    })
+}

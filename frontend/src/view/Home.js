@@ -8,9 +8,11 @@ import {
   getAllExpenses,
   getExpensesByCategory,
   deletExpences,
+  getMonthlyReport
 } from "../controllers/expense.js";
 import CreateExpense from "./CreateExp.js";
 import EditExpense from "./EditExpense.js";
+import MonthlyReport from "./MonthlyReport.js";
 
 import deleteImage from '../images/bin.png';
 import editImage from '../images/pencil.png';
@@ -19,7 +21,13 @@ export default function Home() {
   const [expenses, setExpenses] = useState([]);
   const [isCreateExpenePopUpActive, setIsCreateExpensePopupActive] = useState(false);
   const [isEditExpenePopUpActive, setIsEditExpensePopupActive] = useState(false);
+  const [isViewReportPopUpActive, setIsViewReportPopUpActive] = useState(false);
   const [item, setItem] = useState({});
+  // const [data, setData] = useState([]);
+
+  // const categoryList = [
+  //   'Food', 'Household', 'Social Life', 'Transportation', 'Health', 'Miscellaneous'
+  // ];
 
   const categories = [
     { value: "All", label: "All" },
@@ -34,7 +42,6 @@ export default function Home() {
   useEffect(() => {
     getAllExpenses()
       .then((result) => {
-        console.log(result.result);
         if (result.isSuccess) {
           setExpenses(result.result);
         } else {
@@ -91,6 +98,14 @@ export default function Home() {
         });
       });
   };
+
+  const onViewReport = async () => {
+    await setIsViewReportPopUpActive(true);
+  }
+
+  const onCloseViewReport = async () => {
+    await setIsViewReportPopUpActive(false);
+  }
 
   const onCreateExpense = async () => {
     await setIsCreateExpensePopupActive(true);
@@ -178,10 +193,10 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="d-flex m-3 flex-wrap justify-content-between">
+      <div className="d-flex m-3 flex-wrap justify-content-start">
         {expenses.map((value, index) => {
           return (
-            <div className="col m-3" style={{width: "400px", minWidth:"400px", maxWidth: "400px"}}>
+            <div className="col m-4" style={{width: "400px", minWidth:"400px", maxWidth: "400px"}}>
               <div className="card p-2">
                 <div className="card-body" key={index}>
                   <div className="d-flex flex-column">
@@ -227,8 +242,22 @@ export default function Home() {
           );
         })}
       </div>
+
+      <div className="row d-flex justify-content-between mx-3">
+        <div className="col-3 d-flex">
+          <button
+            type="button"
+            className="btn btn-success px-5"
+            onClick={onViewReport}
+          >
+            View Report
+          </button>
+        </div>
+      </div>
+
       {isCreateExpenePopUpActive ? (<CreateExpense onCloseHandler={onCloseHandlerForCreate} />) : null}
       {isEditExpenePopUpActive ? (<EditExpense onCloseHandler={onCloseHandlerForEdit} item={item} />) : null}
+      {isViewReportPopUpActive ? (<MonthlyReport onCloseHandler={onCloseViewReport}/>) : null}
     </div>
   );
 }
